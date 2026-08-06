@@ -1,33 +1,118 @@
 ---
 layout: default
-title: 홍길동
+title: 글쓰기
 ---
 <section>
-  <h2>소개</h2>
-  <p>
-    안녕하세요! 저는 개발과 디자인에 관심이 많은 사람입니다.
-    새로운 것을 배우고 만들어보는 과정을 즐기며, 이 홈페이지도
-    그런 배움의 일부로 만들어보았습니다.
+  <h2>새 글 쓰기</h2>
+  <p style="font-size:14px; color:#7a8574;">
+    GitHub 개인 액세스 토큰이 필요합니다. 토큰은 저장되지 않고
+    이 페이지를 새로고침하면 사라집니다.
+    <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--pine);">여기서 발급</a>
+    (repo 권한 체크, 만료기간 짧게 설정 추천)
   </p>
+
+  <form class="write-form" id="write-form">
+    <div class="field">
+      <label for="token">GitHub 토큰</label>
+      <input type="password" id="token" placeholder="ghp_..." autocomplete="off" required>
+    </div>
+
+    <div class="field">
+      <label for="owner">GitHub 아이디</label>
+      <input type="text" id="owner" value="33W-hi" required>
+    </div>
+
+    <div class="field">
+      <label for="repo">저장소 이름</label>
+      <input type="text" id="repo" value="33w-hi.github.io" required>
+    </div>
+
+    <div class="field">
+      <label for="title">제목</label>
+      <input type="text" id="title" placeholder="글 제목" required>
+    </div>
+
+    <div class="field">
+      <label for="content">내용</label>
+      <textarea id="content" placeholder="마크다운으로 자유롭게 쓰세요."></textarea>
+      <div class="hint">굵게는 **텍스트**, 소제목은 ## 소제목 형식으로 쓸 수 있어요.</div>
+    </div>
+
+    <button type="submit" class="publish-btn" id="publish-btn">게시하기</button>
+    <div class="status-msg" id="status-msg"></div>
+  </form>
 </section>
 
-<section>
-  <h2>최근 기록</h2>
-  <div class="records">
-    {% for post in site.posts %}
-    <a class="record" href="{{ post.url | relative_url }}">
-      <span class="date">{{ post.date | date: "%Y.%m.%d" }}</span>
-      <span class="title">{{ post.title }}</span>
-    </a>
-    {% endfor %}
-  </div>
-</section>
+<script>
+function slugify(text){
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-가-힣]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^\-+|\-+$/g, '');
+}
 
-<section>
-  <h2>연락처</h2>
-  <ul class="links">
-    <li><a href="mailto:{{ site.email }}">이메일</a></li>
-    <li><a href="https://github.com/{{ site.github_username }}" target="_blank">GitHub</a></li>
-    <li><a href="#" target="_blank">Instagram</a></li>
-  </ul>
-</section>
+document.getElementById('write-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const btn = document.getElementById('publish-btn');
+  const statusEl = document.getElementById('status-msg');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = '';
+
+  const token = document.getElementById('token').value.trim();
+  const owner = document.getElementById('owner').value.trim();
+  const repo = document.getElementById('repo').value.trim();
+  const title = document.getElementById('title').value.trim();
+  const content = document.getElementById('content').value;
+
+  if(!token || !owner || !repo || !title){
+    statusEl.textContent = '토큰, 아이디, 저장소, 제목을 모두 입력해주세요.';
+    statusEl.className = 'status-msg show error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '게시 중...';
+
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0,10);
+  const slug = slugify(title) || 'post';
+  const path = `_posts/${dateStr}-${slug}.md`;
+
+  const fileBody = `---\ntitle: "${title.replace(/"/g,'\\"')}"\ndate: ${dateStr}\n---\n\n${content}\n`;
+
+  try{
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github+json'
+      },
+      body: JSON.stringify({
+        message: `새 글: ${title}`,
+        content: btoa(unescape(encodeURIComponent(fileBody)))
+      })
+    });
+
+    if(res.ok){
+      statusEl.textContent = '게시됐어요! 1분 정도 후 홈 화면에 반영됩니다.';
+      statusEl.className = 'status-msg show success';
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+    } else {
+      const err = await res.json();
+      statusEl.textContent = `게시 실패: ${err.message || res.status}`;
+      statusEl.className = 'status-msg show error';
+    }
+  } catch(err){
+    statusEl.textContent = `오류가 발생했어요: ${err.message}`;
+    statusEl.className = 'status-msg show error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '게시하기';
+  }
+});
+</script>
