@@ -98,79 +98,19 @@
 
   .card b{ color: var(--pine); }
 
-  ul.links{
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .records{
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-direction: column;
   }
 
-  ul.links li a{
-    display: inline-block;
-    padding: 10px 18px;
-    border: 1px solid var(--pine);
-    border-radius: 999px;
-    color: var(--pine);
+  .record{
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--line);
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.15s ease, color 0.15s ease;
+    color: inherit;
   }
 
-  ul.links li a:hover{
-    background: var(--pine);
-    color: var(--paper);
-  }
-
-  footer{
-    margin-top: 80px;
-    font-size: 13px;
-    color: #7a8574;
-    border-top: 1px solid var(--line);
-    padding-top: 20px;
-  }
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="eyebrow">Hello, world</div>
-      <h1>홍길동</h1>
-      <p class="tagline">기록하고 만드는 것을 좋아하는 사람입니다. 이 페이지는 저를 소개하는 작은 공간입니다.</p>
-    </header>
-
-    <section>
-      <h2>소개</h2>
-      <p>
-        안녕하세요! 저는 개발과 디자인에 관심이 많은 사람입니다.
-        새로운 것을 배우고 만들어보는 과정을 즐기며, 이 홈페이지도
-        그런 배움의 일부로 만들어보았습니다.
-      </p>
-    </section>
-
-    <section>
-      <h2>관심 분야</h2>
-      <div class="cards">
-        <div class="card"><b>웹 개발</b> — HTML, CSS, JavaScript로 무언가 만드는 것을 좋아합니다.</div>
-        <div class="card"><b>글쓰기</b> — 생각을 정리하고 기록하는 걸 즐깁니다.</div>
-        <div class="card"><b>새로운 도구 탐구</b> — 새로운 서비스나 기술을 써보는 걸 좋아합니다.</div>
-      </div>
-    </section>
-
-    <section>
-      <h2>연락처</h2>
-      <ul class="links">
-        <li><a href="mailto:example@email.com">이메일</a></li>
-        <li><a href="https://github.com/33W-hi" target="_blank">GitHub</a></li>
-        <li><a href="#" target="_blank">Instagram</a></li>
-      </ul>
-    </section>
-
-    <footer>
-      © 2026 홍길동. GitHub Pages로 만들었습니다.
-    </footer>
-  </div>
-</body>
-</html>
+  .record:first-child{
