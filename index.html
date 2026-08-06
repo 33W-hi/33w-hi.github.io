@@ -114,3 +114,109 @@
   }
 
   .record:first-child{
+    padding-top: 0;
+  }
+
+  .record .date{
+    flex: 0 0 auto;
+    font-size: 13px;
+    color: var(--clay);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .record .title{
+    color: var(--ink);
+    font-size: 16px;
+    transition: color 0.15s ease;
+  }
+
+  .record:hover .title{
+    color: var(--pine);
+    text-decoration: underline;
+  }
+
+  ul.links{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  ul.links li a{
+    display: inline-block;
+    padding: 10px 18px;
+    border: 1px solid var(--pine);
+    border-radius: 999px;
+    color: var(--pine);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  ul.links li a:hover{
+    background: var(--pine);
+    color: var(--paper);
+  }
+
+  footer{
+    margin-top: 80px;
+    font-size: 13px;
+    color: #7a8574;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Hello, world</div>
+      <h1>홍길동</h1>
+      <p class="tagline">이런저런 생각과 하루하루를 남겨두는 공간입니다.</p>
+    </header>
+
+    <section>
+      <h2>소개</h2>
+      <p>
+        안녕하세요! 저는 개발과 디자인에 관심이 많은 사람입니다.
+        새로운 것을 배우고 만들어보는 과정을 즐기며, 이 홈페이지도
+        그런 배움의 일부로 만들어보았습니다.
+      </p>
+    </section>
+
+    <section>
+      <h2>최근 기록</h2>
+      <div class="records">
+        <a class="record" href="#">
+          <span class="date">2026.08.06</span>
+          <span class="title">GitHub Pages로 홈페이지를 처음 만들어봤다</span>
+        </a>
+        <a class="record" href="#">
+          <span class="date">2026.07.28</span>
+          <span class="title">요즘 읽고 있는 책 이야기</span>
+        </a>
+        <a class="record" href="#">
+          <span class="date">2026.07.15</span>
+          <span class="title">주말에 다녀온 곳 기록</span>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>연락처</h2>
+      <ul class="links">
+        <li><a href="mailto:example@email.com">이메일</a></li>
+        <li><a href="https://github.com/33W-hi" target="_blank">GitHub</a></li>
+        <li><a href="#" target="_blank">Instagram</a></li>
+      </ul>
+    </section>
+
+    <footer>
+      © 2026 홍길동. GitHub Pages로 만들었습니다.
+    </footer>
+  </div>
+</body>
+</html>
