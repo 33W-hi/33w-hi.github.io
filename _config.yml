@@ -1,0 +1,26 @@
+title: 홍길동
+description: 이런저런 생각과 하루하루를 남겨두는 공간입니다.
+email: example@email.com
+github_username: 33W-hi
+
+# 날짜/시간대 (한국)
+timezone: Asia/Seoul
+
+# 마크다운 처리
+markdown: kramdown
+
+# 글 목록 URL 형식 (예: /2026/08/06/first-post/)
+permalink: /:year/:month/:day/:title/
+
+# 기본 레이아웃 지정
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
