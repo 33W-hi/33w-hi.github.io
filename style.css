@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Pretendard:wght@400;500;600&display=swap');
+
+:root{
+  --paper: #eef1e9;
+  --ink: #22301f;
+  --pine: #34492e;
+  --clay: #b5652e;
+  --line: #c9cdb9;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  line-height: 1.7;
+}
+
+.wrap{
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 80px 24px 100px;
+}
+
+header.site-header{
+  margin-bottom: 64px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 40px;
+}
+
+header.site-header a{
+  text-decoration: none;
+  color: inherit;
+}
+
+.eyebrow{
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--clay);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+h1{
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(32px, 6vw, 48px);
+  margin: 0 0 16px;
+  font-weight: 700;
+  color: var(--pine);
+}
+
+.tagline{
+  font-size: 18px;
+  color: #4a5847;
+  max-width: 480px;
+}
+
+section{ margin-bottom: 56px; }
+
+h2{
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  color: var(--pine);
+  margin: 0 0 20px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+h2::before{
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--clay);
+  display: inline-block;
+}
+
+p{ margin: 0 0 14px; color: #3a4536; }
+
+.records{
+  display: flex;
+  flex-direction: column;
+}
+
+.record{
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+}
+
+.record:first-child{ padding-top: 0; }
+
+.record .date{
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: var(--clay);
+  font-variant-numeric: tabular-nums;
+}
+
+.record .title{
+  color: var(--ink);
+  font-size: 16px;
+  transition: color 0.15s ease;
+}
+
+.record:hover .title{
+  color: var(--pine);
+  text-decoration: underline;
+}
+
+ul.links{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+ul.links li a{
+  display: inline-block;
+  padding: 10px 18px;
+  border: 1px solid var(--pine);
+  border-radius: 999px;
+  color: var(--pine);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+ul.links li a:hover{
+  background: var(--pine);
+  color: var(--paper);
+}
+
+footer.site-footer{
+  margin-top: 80px;
+  font-size: 13px;
+  color: #7a8574;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+/* 글 상세 페이지 */
+.post-header{
+  margin-bottom: 40px;
+}
+
+.post-date{
+  font-size: 13px;
+  color: var(--clay);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.post-title{
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(28px, 5vw, 38px);
+  color: var(--pine);
+  margin: 0;
+  font-weight: 700;
+}
+
+.post-content{
+  font-size: 16px;
+  color: #333d30;
+}
+
+.post-content p{ margin-bottom: 20px; }
+
+.post-content h2, .post-content h3{
+  font-family: 'Noto Serif KR', serif;
+  color: var(--pine);
+  margin-top: 36px;
+}
+
+.back-link{
+  display: inline-block;
+  margin-top: 48px;
+  font-size: 14px;
+  color: var(--pine);
+  text-decoration: none;
+  border-bottom: 1px solid var(--pine);
+}
+
+.back-link:hover{ opacity: 0.7; }
