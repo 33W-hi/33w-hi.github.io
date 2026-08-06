@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>홍길동 — 소개</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Pretendard:wght@400;500;600&display=swap');
+
+  :root{
+    --paper: #eef1e9;
+    --ink: #22301f;
+    --pine: #34492e;
+    --clay: #b5652e;
+    --line: #c9cdb9;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    line-height: 1.7;
+  }
+
+  .wrap{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 24px 100px;
+  }
+
+  header{
+    margin-bottom: 64px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 40px;
+  }
+
+  .eyebrow{
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--clay);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  h1{
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(36px, 6vw, 52px);
+    margin: 0 0 16px;
+    font-weight: 700;
+    color: var(--pine);
+  }
+
+  .tagline{
+    font-size: 18px;
+    color: #4a5847;
+    max-width: 480px;
+  }
+
+  section{
+    margin-bottom: 56px;
+  }
+
+  h2{
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    color: var(--pine);
+    margin: 0 0 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  h2::before{
+    content: "";
+    width: 22px;
+    height: 2px;
+    background: var(--clay);
+    display: inline-block;
+  }
+
+  p{ margin: 0 0 14px; color: #3a4536; }
+
+  .cards{
+    display: grid;
+    gap: 14px;
+  }
+
+  .card{
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px 20px;
+  }
+
+  .card b{ color: var(--pine); }
+
+  ul.links{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  ul.links li a{
+    display: inline-block;
+    padding: 10px 18px;
+    border: 1px solid var(--pine);
+    border-radius: 999px;
+    color: var(--pine);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  ul.links li a:hover{
+    background: var(--pine);
+    color: var(--paper);
+  }
+
+  footer{
+    margin-top: 80px;
+    font-size: 13px;
+    color: #7a8574;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Hello, world</div>
+      <h1>홍길동</h1>
+      <p class="tagline">기록하고 만드는 것을 좋아하는 사람입니다. 이 페이지는 저를 소개하는 작은 공간입니다.</p>
+    </header>
+
+    <section>
+      <h2>소개</h2>
+      <p>
+        안녕하세요! 저는 개발과 디자인에 관심이 많은 사람입니다.
+        새로운 것을 배우고 만들어보는 과정을 즐기며, 이 홈페이지도
+        그런 배움의 일부로 만들어보았습니다.
+      </p>
+    </section>
+
+    <section>
+      <h2>관심 분야</h2>
+      <div class="cards">
+        <div class="card"><b>웹 개발</b> — HTML, CSS, JavaScript로 무언가 만드는 것을 좋아합니다.</div>
+        <div class="card"><b>글쓰기</b> — 생각을 정리하고 기록하는 걸 즐깁니다.</div>
+        <div class="card"><b>새로운 도구 탐구</b> — 새로운 서비스나 기술을 써보는 걸 좋아합니다.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>연락처</h2>
+      <ul class="links">
+        <li><a href="mailto:example@email.com">이메일</a></li>
+        <li><a href="https://github.com/33W-hi" target="_blank">GitHub</a></li>
+        <li><a href="#" target="_blank">Instagram</a></li>
+      </ul>
+    </section>
+
+    <footer>
+      © 2026 홍길동. GitHub Pages로 만들었습니다.
+    </footer>
+  </div>
+</body>
+</html>
