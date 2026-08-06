@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ page.title | default: site.title }}</title>
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a href="{{ '/' | relative_url }}">
+        <div class="eyebrow">Hello, world</div>
+        <h1>{{ site.title }}</h1>
+      </a>
+      <p class="tagline">{{ site.description }}</p>
+    </header>
+
+    {{ content }}
+
+    <footer class="site-footer">
+      © 2026 {{ site.title }}. GitHub Pages와 Jekyll로 만들었습니다.
+    </footer>
+  </div>
+</body>
+</html>
