@@ -1,47 +1,47 @@
 {
-  "generated_at_kst": "2026-08-11T09:51:30.300+09:00",
+  "generated_at_kst": "2026-08-11T09:55:45.123+09:00",
   "week_label": "2026년 8월 2주차",
   "days": [
     {
       "name": "Mon",
       "icon": "🌱",
       "weekend": false,
-      "lunch": "계란 + 돼지고기",
-      "dinner": "오리고기 + 수육용 목살"
+      "lunch": "참치 + 돼지고기",
+      "dinner": "참치 + 오리고기"
     },
     {
       "name": "Tue",
       "icon": "☀️",
       "weekend": false,
-      "lunch": "파스타 소스 + 참치",
-      "dinner": "참치 + 돼지고기"
+      "lunch": "돼지고기 + 파스타면",
+      "dinner": "오리고기 + 돼지고기"
     },
     {
       "name": "Wed",
       "icon": "🌤️",
       "weekend": false,
-      "lunch": "오리고기 + 참치",
-      "dinner": "오리고기 + 수육용 목살"
+      "lunch": "만두 + 파스타면",
+      "dinner": "참치 + 파스타 소스"
     },
     {
       "name": "Thu",
       "icon": "🍜",
       "weekend": false,
-      "lunch": "수육용 목살 + 파스타면",
-      "dinner": "파스타면 + 계란"
+      "lunch": "참치 + 오리고기",
+      "dinner": "제육용 앞다리살 + 파스타면"
     },
     {
       "name": "Fri",
       "icon": "🍗",
       "weekend": false,
-      "lunch": "참치 + 오리고기",
+      "lunch": "수육용 목살 + 파스타 소스",
       "dinner": "치킨파티"
     },
     {
       "name": "Sat",
       "icon": "🎤",
       "weekend": true,
-      "lunch": "계란 + 만두",
+      "lunch": "오리고기 + 참치",
       "dinner": "외식, 노래방 데이"
     },
     {
@@ -49,7 +49,7 @@
       "icon": "⛪",
       "weekend": true,
       "lunch": "성당 다녀온 뒤 외식",
-      "dinner": "수육용 목살 + 참치"
+      "dinner": "제육용 앞다리살 + 만두"
     }
   ]
 }
