@@ -486,32 +486,33 @@ footer.site-footer{
 
 /* 인쇄 */
 @media print{
-  body *{ visibility: hidden; }
+  .no-print{ display: none !important; }
 
-  .print-area, .print-area *{
-    visibility: visible;
+  body{ background: #fff; }
+
+  .wrap{
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .print-area{
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  .print-area{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+  .print-area *{
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-
-  .no-print{ display: none !important; }
 
   @page{
     size: A4;
     margin: 14mm;
   }
 
-  body{ background: #fff; }
-
-  .diet-banner{ padding: 16px 20px; }
+  .diet-banner{ padding: 16px 20px; margin-bottom: 20px; }
   .diet-table td, .diet-table th{ padding: 10px 12px; font-size: 13px; }
   .breakfast-box{ padding: 16px; }
-  .diet-layout{ gap: 16px; }
+  .diet-layout{ gap: 16px; margin-bottom: 0; }
+  section{ margin-bottom: 0; }
 }
