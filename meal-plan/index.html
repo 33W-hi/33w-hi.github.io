@@ -7,7 +7,7 @@ title: 이번 주 식단
     <div class="bowl-icon">🥗</div>
     <div class="banner-text" style="flex:1;">
       <input type="text" id="banner-title" placeholder="OO의 Weekly Diet Plan" value="나의 Weekly Diet Plan">
-      <div class="banner-sub" id="banner-week"></div>
+      <div class="banner-sub">{{ site.data.current_week.week_label }} · 매주 일요일 09시 자동 생성</div>
     </div>
   </div>
 
@@ -19,126 +19,41 @@ title: 이번 주 식단
     </div>
 
     <div class="diet-table-wrap">
-      <table class="diet-table" id="diet-table">
+      <table class="diet-table">
         <thead>
           <tr><th>요일</th><th>중식</th><th>석식</th></tr>
         </thead>
-        <tbody id="diet-tbody"></tbody>
+        <tbody>
+          {% for day in site.data.current_week.days %}
+          <tr class="{% if day.weekend %}weekend{% endif %}">
+            <td class="day-cell"><span class="day-icon">{{ day.icon }}</span>{{ day.name }}</td>
+            <td>{{ day.lunch }}</td>
+            <td>{{ day.dinner }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>
-</section>
 
-<section>
-  <h2>재료</h2>
-  <p style="font-size:14px; color:#7a8574; margin-bottom:14px;">
-    가진 재료를 쉼표(,)로 구분해서 적어주세요. 중식/석식에 자동으로 조합돼요.
+  <p style="font-size:13px; color:#7a8574; margin-top:20px;">
+    매주 사는 재료: {{ site.data.ingredients.ingredients | join: ", " }}
   </p>
-  <textarea class="meal-ingredients" id="ingredients" placeholder="예: 계란, 시금치, 두부, 김치, 돼지고기, 양파, 감자, 애호박, 콩나물, 닭가슴살"></textarea>
 
-  <div class="meal-controls">
-    <button class="meal-btn primary" id="regenerate-btn">🔀 다시 섞기</button>
-    <button class="meal-btn secondary" id="save-btn">저장</button>
-  </div>
+  <a href="https://github.com/{{ site.github_username }}/{{ site.github_username | downcase }}.github.io/actions/workflows/weekly-meal-plan.yml"
+     target="_blank" class="write-cta" style="margin-top:16px;">
+    🔀 지금 바로 다시 만들기 (수동 실행)
+  </a>
 </section>
 
 <script>
-const DAYS = [
-  { name: 'Mon', icon: '🌱', weekend: false },
-  { name: 'Tue', icon: '☀️', weekend: false },
-  { name: 'Wed', icon: '🌤️', weekend: false },
-  { name: 'Thu', icon: '🍜', weekend: false },
-  { name: 'Fri', icon: '🍗', weekend: false },
-  { name: 'Sat', icon: '🎤', weekend: true },
-  { name: 'Sun', icon: '⛪', weekend: true }
-];
-
-const ITEMS_PER_MEAL = 2;
-const KEY_INGREDIENTS = 'mealplan-ingredients';
 const KEY_BREAKFAST = 'mealplan-breakfast';
 const KEY_TITLE = 'mealplan-title';
-
-const ingredientsEl = document.getElementById('ingredients');
 const breakfastEl = document.getElementById('breakfast');
 const titleEl = document.getElementById('banner-title');
-const weekEl = document.getElementById('banner-week');
-const tbody = document.getElementById('diet-tbody');
 
-// 저장된 값 불러오기
-if(localStorage.getItem(KEY_INGREDIENTS)) ingredientsEl.value = localStorage.getItem(KEY_INGREDIENTS);
 if(localStorage.getItem(KEY_BREAKFAST)) breakfastEl.value = localStorage.getItem(KEY_BREAKFAST);
 if(localStorage.getItem(KEY_TITLE)) titleEl.value = localStorage.getItem(KEY_TITLE);
-
-function getISOWeekSeed(date){
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  return { seed: d.getUTCFullYear() * 100 + weekNo, weekNo, year: d.getUTCFullYear() };
-}
-
-function mulberry32(seed){
-  return function(){
-    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function parseIngredients(){
-  return ingredientsEl.value.split(',').map(s => s.trim()).filter(Boolean);
-}
-
-function pickItems(list, count, rand){
-  if(list.length === 0) return [];
-  const picked = [];
-  for(let i = 0; i < count; i++){
-    picked.push(list[Math.floor(rand() * list.length)]);
-  }
-  return [...new Set(picked)];
-}
-
-function renderTable(seed){
-  const ingredients = parseIngredients();
-  const rand = mulberry32(seed);
-
-  tbody.innerHTML = DAYS.map(day => {
-    const lunch = ingredients.length ? pickItems(ingredients, ITEMS_PER_MEAL, rand).join(' + ') : '-';
-    const dinner = ingredients.length ? pickItems(ingredients, ITEMS_PER_MEAL, rand).join(' + ') : '-';
-    return `<tr class="${day.weekend ? 'weekend' : ''}">
-      <td class="day-cell"><span class="day-icon">${day.icon}</span>${day.name}</td>
-      <td>${lunch}</td>
-      <td>${dinner}</td>
-    </tr>`;
-  }).join('');
-}
-
-function currentWeekInfo(){
-  return getISOWeekSeed(new Date());
-}
-
-function showWeekLabel(){
-  const info = currentWeekInfo();
-  const now = new Date();
-  const month = now.getMonth() + 1;
-  weekEl.textContent = `${info.year}년 ${month}월 · ${info.weekNo}주차 (매주 자동 갱신)`;
-}
-
-showWeekLabel();
-renderTable(currentWeekInfo().seed);
-
-document.getElementById('regenerate-btn').addEventListener('click', () => {
-  renderTable(Math.floor(Math.random() * 1000000));
-});
-
-document.getElementById('save-btn').addEventListener('click', () => {
-  localStorage.setItem(KEY_INGREDIENTS, ingredientsEl.value);
-  localStorage.setItem(KEY_BREAKFAST, breakfastEl.value);
-  localStorage.setItem(KEY_TITLE, titleEl.value);
-  renderTable(currentWeekInfo().seed);
-});
 
 breakfastEl.addEventListener('blur', () => localStorage.setItem(KEY_BREAKFAST, breakfastEl.value));
 titleEl.addEventListener('blur', () => localStorage.setItem(KEY_TITLE, titleEl.value));
