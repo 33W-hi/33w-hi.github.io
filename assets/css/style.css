@@ -192,3 +192,294 @@ footer.site-footer{
 }
 
 .back-link:hover{ opacity: 0.7; }
+
+/* 글쓰기 페이지 */
+.write-form{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field label{
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pine);
+  margin-bottom: 8px;
+}
+
+.field input[type="text"],
+.field input[type="password"],
+.field textarea{
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+}
+
+.field textarea{
+  min-height: 260px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.field input:focus,
+.field textarea:focus{
+  outline: none;
+  border-color: var(--pine);
+}
+
+.field .hint{
+  font-size: 12px;
+  color: #7a8574;
+  margin-top: 6px;
+}
+
+.publish-btn{
+  align-self: flex-start;
+  padding: 12px 28px;
+  background: var(--pine);
+  color: var(--paper);
+  border: none;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.publish-btn:hover{ opacity: 0.85; }
+.publish-btn:disabled{ opacity: 0.5; cursor: not-allowed; }
+
+.status-msg{
+  font-size: 14px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  display: none;
+}
+
+.status-msg.show{ display: block; }
+.status-msg.success{ background: #e4ede0; color: var(--pine); }
+.status-msg.error{ background: #f6e2da; color: #a13f16; }
+
+.write-cta{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--pine);
+  color: var(--paper) !important;
+  border-radius: 999px;
+  text-decoration: none !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.write-cta:hover{ opacity: 0.85; }
+
+/* 식단 페이지 */
+.meal-ingredients{
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+  min-height: 90px;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.meal-controls{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.meal-btn{
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--pine);
+  transition: opacity 0.15s ease;
+}
+
+.meal-btn.primary{
+  background: var(--pine);
+  color: var(--paper);
+  border: none;
+}
+
+.meal-btn.secondary{
+  background: transparent;
+  color: var(--pine);
+}
+
+.meal-btn:hover{ opacity: 0.8; }
+
+.week-label{
+  font-size: 13px;
+  color: var(--clay);
+  margin-bottom: 20px;
+}
+
+.meal-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.meal-table th{
+  text-align: left;
+  font-size: 12px;
+  color: #7a8574;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.meal-table td{
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  vertical-align: top;
+}
+
+.meal-table td.day-cell{
+  font-weight: 600;
+  color: var(--pine);
+  white-space: nowrap;
+}
+
+.empty-note{
+  color: #7a8574;
+  font-size: 14px;
+}
+
+/* 식단 - 배너형 레이아웃 */
+.diet-banner{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #2f6a6b, #3f8583);
+  color: #fff;
+  border-radius: 14px;
+  padding: 22px 28px;
+  margin-bottom: 28px;
+}
+
+.diet-banner .bowl-icon{ font-size: 40px; flex: 0 0 auto; }
+
+.diet-banner .banner-text input{
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700;
+  font-size: 22px;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.diet-banner .banner-text input::placeholder{ color: rgba(255,255,255,0.6); }
+
+.diet-banner .banner-sub{
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  margin-top: 4px;
+}
+
+.diet-layout{
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 640px){
+  .diet-layout{ grid-template-columns: 1fr; }
+}
+
+.breakfast-box{
+  background: #dcebe4;
+  border-radius: 12px;
+  padding: 20px 18px;
+  text-align: center;
+}
+
+.breakfast-box .bf-title{
+  font-weight: 700;
+  color: var(--pine);
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.breakfast-box .bf-sub{
+  font-size: 11px;
+  color: #5a7a70;
+  margin-bottom: 14px;
+}
+
+.breakfast-box textarea{
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink);
+  resize: none;
+  min-height: 130px;
+  font-family: 'Pretendard', sans-serif;
+  line-height: 1.9;
+}
+
+.diet-table-wrap{
+  overflow-x: auto;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.diet-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fff;
+}
+
+.diet-table thead th{
+  background: #3f8583;
+  color: #fff;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.diet-table thead th:first-child{ width: 100px; }
+
+.diet-table tbody td{
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.diet-table tbody tr:nth-child(odd){ background: #f4f7f0; }
+.diet-table tbody tr.weekend{ background: #fbe9dd; }
+
+.diet-table td.day-cell{
+  font-weight: 700;
+  color: var(--pine);
+  white-space: nowrap;
+}
+
+.diet-table td.day-cell .day-icon{ margin-right: 6px; }
