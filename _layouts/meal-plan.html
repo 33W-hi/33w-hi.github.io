@@ -1,0 +1,10 @@
+---
+layout: default
+---
+<section class="print-area">
+  {% include diet-table.html days=page.days week_label=page.week_label %}
+</section>
+
+<p class="no-print" style="margin-top:24px; font-size:13px;">
+  <a href="{{ '/meal-plan/' | relative_url }}" style="color:var(--pine);">← 전체 식단 목록으로</a>
+</p>

@@ -12,6 +12,12 @@ markdown: kramdown
 # 글 목록 URL 형식 (예: /2026/08/06/first-post/)
 permalink: /:year/:month/:day/:title/
 
+# 주간 식단 게시물 컬렉션 (매주 새 파일이 하나씩 추가됨)
+collections:
+  meal_plans:
+    output: true
+    permalink: /meal-plan/:name/
+
 # 기본 레이아웃 지정
 defaults:
   - scope:
@@ -24,3 +30,8 @@ defaults:
       type: "pages"
     values:
       layout: "default"
+  - scope:
+      path: ""
+      type: "meal_plans"
+    values:
+      layout: "meal-plan"

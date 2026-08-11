@@ -2,59 +2,37 @@
 layout: default
 title: 이번 주 식단
 ---
-<section>
-  <div class="diet-banner">
-    <div class="bowl-icon">🥗</div>
-    <div class="banner-text" style="flex:1;">
-      <input type="text" id="banner-title" placeholder="OO의 Weekly Diet Plan" value="나의 Weekly Diet Plan">
-      <div class="banner-sub">{{ site.data.current_week.week_label }} · 매주 일요일 09시 자동 생성</div>
-    </div>
+{% assign sorted_plans = site.meal_plans | sort: 'week_start' %}
+{% assign latest = sorted_plans | last %}
+
+{% if latest %}
+<section class="print-area">
+  {% include diet-table.html days=latest.days week_label=latest.week_label %}
+</section>
+{% else %}
+<p class="empty-note">아직 생성된 식단이 없어요. 매주 일요일 09시에 자동으로 만들어져요.</p>
+{% endif %}
+
+<section class="no-print">
+  <h2>지난 식단</h2>
+  {% assign past_plans = sorted_plans | reverse %}
+  <div class="records">
+    {% for plan in past_plans %}
+      {% unless plan.week_start == latest.week_start %}
+      <a class="record" href="{{ plan.url | relative_url }}">
+        <span class="date">{{ plan.week_start }}</span>
+        <span class="title">{{ plan.week_label }} 식단</span>
+      </a>
+      {% endunless %}
+    {% endfor %}
   </div>
-
-  <div class="diet-layout">
-    <div class="breakfast-box">
-      <div class="bf-title">공통 조식</div>
-      <div class="bf-sub">Daily Breakfast</div>
-      <textarea id="breakfast" placeholder="그릭요거트&#10;견과류&#10;제철과일 1/2"></textarea>
-    </div>
-
-    <div class="diet-table-wrap">
-      <table class="diet-table">
-        <thead>
-          <tr><th>요일</th><th>중식</th><th>석식</th></tr>
-        </thead>
-        <tbody>
-          {% for day in site.data.current_week.days %}
-          <tr class="{% if day.weekend %}weekend{% endif %}">
-            <td class="day-cell"><span class="day-icon">{{ day.icon }}</span>{{ day.name }}</td>
-            <td>{{ day.lunch }}</td>
-            <td>{{ day.dinner }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <p style="font-size:13px; color:#7a8574; margin-top:20px;">
-    매주 사는 재료: {{ site.data.ingredients.ingredients | join: ", " }}
-  </p>
-
-  <a href="https://github.com/{{ site.github_username }}/{{ site.github_username | downcase }}.github.io/actions/workflows/weekly-meal-plan.yml"
-     target="_blank" class="write-cta" style="margin-top:16px;">
-    🔀 지금 바로 다시 만들기 (수동 실행)
-  </a>
+  {% if past_plans.size <= 1 %}
+  <p class="empty-note">아직 지난 식단이 없어요.</p>
+  {% endif %}
 </section>
 
-<script>
-const KEY_BREAKFAST = 'mealplan-breakfast';
-const KEY_TITLE = 'mealplan-title';
-const breakfastEl = document.getElementById('breakfast');
-const titleEl = document.getElementById('banner-title');
-
-if(localStorage.getItem(KEY_BREAKFAST)) breakfastEl.value = localStorage.getItem(KEY_BREAKFAST);
-if(localStorage.getItem(KEY_TITLE)) titleEl.value = localStorage.getItem(KEY_TITLE);
-
-breakfastEl.addEventListener('blur', () => localStorage.setItem(KEY_BREAKFAST, breakfastEl.value));
-titleEl.addEventListener('blur', () => localStorage.setItem(KEY_TITLE, titleEl.value));
-</script>
+<section class="no-print">
+  <p style="font-size:13px; color:#7a8574;">
+    매주 사는 재료: {{ site.data.ingredients.ingredients | join: ", " }}
+  </p>
+</section>

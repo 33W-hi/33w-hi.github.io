@@ -1,0 +1,54 @@
+<div class="diet-banner">
+  <div class="bowl-icon">🥗</div>
+  <div class="banner-text" style="flex:1;">
+    <input type="text" class="banner-title-input" placeholder="OO의 Weekly Diet Plan" value="나의 Weekly Diet Plan">
+    <div class="banner-sub">{{ include.week_label }} · 매주 일요일 09시 자동 생성</div>
+  </div>
+</div>
+
+<div class="diet-layout">
+  <div class="breakfast-box">
+    <div class="bf-title">공통 조식</div>
+    <div class="bf-sub">Daily Breakfast</div>
+    <textarea class="breakfast-input" placeholder="그릭요거트&#10;견과류&#10;제철과일 1/2"></textarea>
+  </div>
+
+  <div class="diet-table-wrap">
+    <table class="diet-table">
+      <thead>
+        <tr><th>요일</th><th>중식</th><th>석식</th></tr>
+      </thead>
+      <tbody>
+        {% for day in include.days %}
+        <tr class="{% if day.weekend %}weekend{% endif %}">
+          <td class="day-cell"><span class="day-icon">{{ day.icon }}</span>{{ day.name }}</td>
+          <td>{{ day.lunch }}</td>
+          <td>{{ day.dinner }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="no-print" style="margin-top:20px;">
+  <button onclick="window.print()" class="meal-btn primary">🖨 인쇄하기</button>
+</div>
+
+<script>
+(function(){
+  const KEY_BREAKFAST = 'mealplan-breakfast';
+  const KEY_TITLE = 'mealplan-title';
+  const breakfastEl = document.querySelector('.breakfast-input');
+  const titleEl = document.querySelector('.banner-title-input');
+
+  if(breakfastEl){
+    if(localStorage.getItem(KEY_BREAKFAST)) breakfastEl.value = localStorage.getItem(KEY_BREAKFAST);
+    breakfastEl.addEventListener('blur', () => localStorage.setItem(KEY_BREAKFAST, breakfastEl.value));
+  }
+  if(titleEl){
+    if(localStorage.getItem(KEY_TITLE)) titleEl.value = localStorage.getItem(KEY_TITLE);
+    titleEl.addEventListener('blur', () => localStorage.setItem(KEY_TITLE, titleEl.value));
+  }
+})();
+</script>

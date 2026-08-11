@@ -483,3 +483,35 @@ footer.site-footer{
 }
 
 .diet-table td.day-cell .day-icon{ margin-right: 6px; }
+
+/* 인쇄 */
+@media print{
+  body *{ visibility: hidden; }
+
+  .print-area, .print-area *{
+    visibility: visible;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print-area{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .no-print{ display: none !important; }
+
+  @page{
+    size: A4;
+    margin: 14mm;
+  }
+
+  body{ background: #fff; }
+
+  .diet-banner{ padding: 16px 20px; }
+  .diet-table td, .diet-table th{ padding: 10px 12px; font-size: 13px; }
+  .breakfast-box{ padding: 16px; }
+  .diet-layout{ gap: 16px; }
+}
