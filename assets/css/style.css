@@ -365,6 +365,44 @@ footer.site-footer{
   font-size: 14px;
 }
 
+/* 던킨 메모 */
+.dunkin-notes{ margin-top: 8px; }
+
+.dunkin-notes h3{
+  font-family: 'Noto Serif KR', serif;
+  color: var(--pine);
+  font-size: 15px;
+  margin-top: 20px;
+  margin-bottom: 6px;
+}
+
+.dunkin-notes p{ font-size: 14px; }
+
+.note-form{
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.note-input, .note-textarea{
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  margin-bottom: 10px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.note-textarea{ min-height: 80px; resize: vertical; }
+
+.note-input:focus, .note-textarea:focus{
+  outline: none;
+  border-color: var(--pine);
+}
+
 /* 식단 - 배너형 레이아웃 */
 .diet-banner{
   display: flex;

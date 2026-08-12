@@ -8,6 +8,22 @@ layout: default
     {{ page.period_raw }} <span class="dunkin-status"></span>
   </p>
   <a href="{{ page.external_url }}" target="_blank" class="write-cta">공식 이벤트 페이지 보기 →</a>
+
+  <div class="dunkin-notes" id="dunkin-notes">
+    {{ content }}
+  </div>
+
+  <div class="note-form">
+    <h3 style="font-size:15px; color:var(--pine); margin:0 0 10px;">메모 남기기</h3>
+    <p style="font-size:12px; color:#7a8574; margin-bottom:10px;">
+      던킨 홈페이지에서 본 자세한 내용을 요약해두면, 나중에 이벤트가 내려가도 여기 남아있어요.
+      GitHub 토큰이 필요해요 (<a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--pine);">발급받기</a>, repo 권한 체크).
+    </p>
+    <input type="password" id="note-token" placeholder="GitHub 토큰 (ghp_...)" class="note-input" autocomplete="off">
+    <textarea id="note-text" placeholder="예: 해피앱 스캔 시 40% 할인, 주말 제외, 매장 픽업만 가능" class="note-textarea"></textarea>
+    <button id="note-submit" class="meal-btn primary">메모 저장</button>
+    <div class="status-msg" id="note-status"></div>
+  </div>
 </section>
 
 <p style="margin-top:32px; font-size:13px;">
@@ -17,14 +33,88 @@ layout: default
 <script>
 (function(){
   var el = document.querySelector('.dunkin-period');
-  if(!el) return;
-  var statusEl = el.querySelector('.dunkin-status');
-  var start = el.getAttribute('data-start');
-  var end = el.getAttribute('data-end');
-  var today = new Date().toISOString().slice(0,10);
-  var active = (!start || start <= today) && (!end || today <= end);
-  statusEl.textContent = active ? '· 진행중' : '· 종료';
-  statusEl.style.color = active ? 'var(--pine)' : '#999';
-  statusEl.style.fontWeight = '600';
+  if(el){
+    var statusEl = el.querySelector('.dunkin-status');
+    var start = el.getAttribute('data-start');
+    var end = el.getAttribute('data-end');
+    var today = new Date().toISOString().slice(0,10);
+    var active = (!start || start <= today) && (!end || today <= end);
+    statusEl.textContent = active ? '· 진행중' : '· 종료';
+    statusEl.style.color = active ? 'var(--pine)' : '#999';
+    statusEl.style.fontWeight = '600';
+  }
 })();
+
+document.getElementById('note-submit').addEventListener('click', async function(){
+  var btn = this;
+  var statusEl = document.getElementById('note-status');
+  var token = document.getElementById('note-token').value.trim();
+  var text = document.getElementById('note-text').value.trim();
+  var owner = '{{ site.github_username }}';
+  var repo = '{{ site.github_username | downcase }}.github.io';
+  var filePath = '_dunkin/{{ page.event_id }}.md';
+
+  statusEl.className = 'status-msg';
+  statusEl.textContent = '';
+
+  if(!token || !text){
+    statusEl.textContent = '토큰과 메모 내용을 입력해주세요.';
+    statusEl.className = 'status-msg show error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '저장 중...';
+
+  try{
+    var getRes = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + filePath, {
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' }
+    });
+    if(!getRes.ok) throw new Error('파일을 불러오지 못했어요 (' + getRes.status + ')');
+    var fileData = await getRes.json();
+    var currentContent = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+
+    var today = new Date();
+    var dateLabel = today.getFullYear() + '.' + String(today.getMonth()+1).padStart(2,'0') + '.' + String(today.getDate()).padStart(2,'0');
+    var addition = '\n\n### 메모 · ' + dateLabel + '\n\n' + text + '\n';
+
+    var newContent = currentContent + addition;
+    var newContentB64 = btoa(unescape(encodeURIComponent(newContent)));
+
+    var putRes = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + filePath, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' },
+      body: JSON.stringify({
+        message: '메모 추가: {{ page.event_id }}',
+        content: newContentB64,
+        sha: fileData.sha
+      })
+    });
+
+    if(!putRes.ok){
+      var err = await putRes.json();
+      throw new Error(err.message || ('저장 실패 ' + putRes.status));
+    }
+
+    statusEl.textContent = '저장됐어요! 1분 정도 후 새로고침하면 정식으로 반영돼요.';
+    statusEl.className = 'status-msg show success';
+    document.getElementById('note-text').value = '';
+
+    var notesEl = document.getElementById('dunkin-notes');
+    var h3 = document.createElement('h3');
+    h3.textContent = '메모 · ' + dateLabel;
+    h3.style.cssText = 'font-family: "Noto Serif KR", serif; color: var(--pine); margin-top: 20px;';
+    var p = document.createElement('p');
+    p.textContent = text;
+    notesEl.appendChild(h3);
+    notesEl.appendChild(p);
+
+  } catch(err){
+    statusEl.textContent = '오류: ' + err.message;
+    statusEl.className = 'status-msg show error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '메모 저장';
+  }
+});
 </script>
