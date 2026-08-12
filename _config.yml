@@ -17,6 +17,9 @@ collections:
   meal_plans:
     output: true
     permalink: /meal-plan/:name/
+  dunkin:
+    output: true
+    permalink: /dunkin/:name/
 
 # 기본 레이아웃 지정
 defaults:
@@ -35,3 +38,8 @@ defaults:
       type: "meal_plans"
     values:
       layout: "meal-plan"
+  - scope:
+      path: ""
+      type: "dunkin"
+    values:
+      layout: "dunkin-post"

@@ -1,0 +1,30 @@
+---
+layout: default
+---
+<section style="max-width:600px;">
+  <h2 style="margin-bottom:6px;">{{ page.title }}</h2>
+  <p class="dunkin-period" data-start="{{ page.period_start }}" data-end="{{ page.period_end }}"
+     style="font-size:13px; color:var(--clay); margin-bottom:20px;">
+    {{ page.period_raw }} <span class="dunkin-status"></span>
+  </p>
+  <a href="{{ page.external_url }}" target="_blank" class="write-cta">공식 이벤트 페이지 보기 →</a>
+</section>
+
+<p style="margin-top:32px; font-size:13px;">
+  <a href="{{ '/dunkin/' | relative_url }}" style="color:var(--pine);">← 전체 목록으로</a>
+</p>
+
+<script>
+(function(){
+  var el = document.querySelector('.dunkin-period');
+  if(!el) return;
+  var statusEl = el.querySelector('.dunkin-status');
+  var start = el.getAttribute('data-start');
+  var end = el.getAttribute('data-end');
+  var today = new Date().toISOString().slice(0,10);
+  var active = (!start || start <= today) && (!end || today <= end);
+  statusEl.textContent = active ? '· 진행중' : '· 종료';
+  statusEl.style.color = active ? 'var(--pine)' : '#999';
+  statusEl.style.fontWeight = '600';
+})();
+</script>

@@ -1,0 +1,42 @@
+---
+layout: default
+title: 던킨 프로모션
+---
+<section>
+  <h2>던킨 프로모션 게시판</h2>
+  <p style="font-size:14px; color:#7a8574; margin-bottom:20px;">
+    매일 던킨 공식 이벤트 페이지를 확인해서, 새 프로모션이 나오면 자동으로 새 글이 올라와요.
+  </p>
+
+  {% assign promos = site.dunkin | sort: 'period_start' | reverse %}
+  <div class="records" id="dunkin-list">
+    {% for promo in promos %}
+    <a class="record dunkin-item" href="{{ promo.url | relative_url }}"
+       data-start="{{ promo.period_start }}" data-end="{{ promo.period_end }}">
+      <span class="date">{{ promo.period_raw }}</span>
+      <span class="title">{{ promo.title }} <span class="dunkin-status"></span></span>
+    </a>
+    {% endfor %}
+  </div>
+  {% if promos.size == 0 %}
+  <p class="empty-note">아직 게시된 프로모션이 없어요.</p>
+  {% endif %}
+</section>
+
+<script>
+(function(){
+  var today = new Date().toISOString().slice(0,10);
+  document.querySelectorAll('.dunkin-item').forEach(function(item){
+    var start = item.getAttribute('data-start');
+    var end = item.getAttribute('data-end');
+    var active = (!start || start <= today) && (!end || today <= end);
+    var statusEl = item.querySelector('.dunkin-status');
+    if(statusEl){
+      statusEl.textContent = active ? '· 진행중' : '· 종료';
+      statusEl.style.color = active ? 'var(--pine)' : '#999';
+      statusEl.style.fontWeight = '600';
+      statusEl.style.fontSize = '12px';
+    }
+  });
+})();
+</script>
