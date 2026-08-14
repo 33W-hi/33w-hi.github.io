@@ -12,35 +12,42 @@ title: 개봉역 주변 일정
   <a class="write-cta" href="{{ '/schedule/write/' | relative_url }}" style="margin-bottom:24px;">✎ 아이파크몰 일정 추가</a>
 
   {% assign today = 'now' | date: '%Y-%m-%d' %}
-  {% assign events = site.area_events | sort: 'start' %}
+  {% assign upcoming = site.area_events | where_exp: "item", "item.end >= today" | sort: 'start' %}
+  {% assign past = site.area_events | where_exp: "item", "item.end < today" | sort: 'start' | reverse %}
 
   <div class="records" id="schedule-list" style="margin-top:20px;">
-    {% for ev in events %}
-    <div class="record schedule-item" data-start="{{ ev.start }}" data-end="{{ ev.end | default: ev.start }}" style="flex-direction:column; align-items:flex-start; gap:4px;">
-      <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
-        <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
-        <span class="title">{{ ev.title }}</span>
+    {% for ev in upcoming %}
+      {% assign is_current = false %}
+      {% if ev.start <= today and today <= ev.end %}{% assign is_current = true %}{% endif %}
+      <div class="record schedule-item {% if is_current %}current{% elsif forloop.first %}next{% endif %}" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
+          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
+          <span class="title">{{ ev.title }}</span>
+          {% if is_current %}<span class="tag-current">진행중</span>{% elsif forloop.first %}<span class="tag-next">다음 일정</span>{% endif %}
+        </div>
+        <div style="font-size:12px;" class="schedule-source">
+          {% if ev.source == '아이파크몰 고척점' %}🛍{% else %}⚾{% endif %} {{ ev.source }}
+          {% if ev.note %} · {{ ev.note }}{% endif %}
+        </div>
       </div>
-      <div style="font-size:12px; color:#7a8574;">
-        {% if ev.source == '아이파크몰 고척점' %}🛍{% else %}⚾{% endif %} {{ ev.source }}
-        {% if ev.note %} · {{ ev.note }}{% endif %}
+    {% endfor %}
+
+    {% for ev in past %}
+      <div class="record schedule-item past" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
+          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
+          <span class="title">{{ ev.title }}</span>
+        </div>
+        <div style="font-size:12px;" class="schedule-source">
+          {% if ev.source == '아이파크몰 고척점' %}🛍{% else %}⚾{% endif %} {{ ev.source }}
+          {% if ev.note %} · {{ ev.note }}{% endif %}
+        </div>
       </div>
-    </div>
     {% endfor %}
   </div>
-  {% if events.size == 0 %}
+
+  {% assign total_count = upcoming.size | plus: past.size %}
+  {% if total_count == 0 %}
   <p class="empty-note">아직 등록된 일정이 없어요.</p>
   {% endif %}
 </section>
-
-<script>
-(function(){
-  var today = new Date().toISOString().slice(0,10);
-  document.querySelectorAll('.schedule-item').forEach(function(item){
-    var end = item.getAttribute('data-end');
-    if(end < today){
-      item.style.opacity = '0.45';
-    }
-  });
-})();
-</script>

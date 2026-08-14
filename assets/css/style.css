@@ -403,6 +403,53 @@ footer.site-footer{
   border-color: var(--pine);
 }
 
+/* 일정 게시판 */
+.schedule-item.current{
+  background: var(--pine);
+  border-radius: 8px;
+  padding: 14px 16px;
+  border-bottom: none;
+  margin-bottom: 4px;
+}
+
+.schedule-item.current .date,
+.schedule-item.current .title{
+  color: #fff;
+}
+
+.schedule-item.current .schedule-source{
+  color: rgba(255,255,255,0.8);
+}
+
+.schedule-item.next{
+  border-left: 3px solid var(--clay);
+  padding-left: 13px;
+}
+
+.schedule-item.past{
+  opacity: 0.45;
+}
+
+.schedule-item .schedule-source{ color: #7a8574; }
+
+.tag-current, .tag-next{
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+
+.tag-current{
+  background: #fff;
+  color: var(--pine);
+}
+
+.tag-next{
+  background: var(--clay);
+  color: #fff;
+}
+
 /* 식단 - 배너형 레이아웃 */
 .diet-banner{
   display: flex;
