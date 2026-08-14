@@ -1,0 +1,124 @@
+---
+layout: default
+title: 아이파크몰 일정 추가
+---
+<section>
+  <h2>아이파크몰 고척점 일정 추가</h2>
+  <p style="font-size:14px; color:#7a8574; margin-bottom:14px;">
+    인스타그램(@iparkmall_gc)이나 방문했을 때 본 행사를 여기 적어주세요.
+    GitHub 토큰이 필요해요 (repo 권한).
+  </p>
+
+  <form class="write-form" id="area-form">
+    <div class="field">
+      <label for="token">GitHub 토큰</label>
+      <input type="password" id="token" placeholder="ghp_..." autocomplete="off" required>
+    </div>
+
+    <div class="field">
+      <label for="title">행사 이름</label>
+      <input type="text" id="title" placeholder="예: 여름 프리마켓" required>
+    </div>
+
+    <div class="field">
+      <label for="start">시작일</label>
+      <input type="date" id="start" required>
+    </div>
+
+    <div class="field">
+      <label for="end">종료일 (하루짜리면 비워두세요)</label>
+      <input type="date" id="end">
+    </div>
+
+    <div class="field">
+      <label for="note">메모 (선택)</label>
+      <input type="text" id="note" placeholder="예: 광장 팝업, 주말만">
+    </div>
+
+    <button type="submit" class="publish-btn" id="publish-btn">일정 추가</button>
+    <div class="status-msg" id="status-msg"></div>
+  </form>
+</section>
+
+<script>
+function slugify(text){
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-가-힣]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^\-+|\-+$/g, '');
+}
+
+document.getElementById('area-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const btn = document.getElementById('publish-btn');
+  const statusEl = document.getElementById('status-msg');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = '';
+
+  const token = document.getElementById('token').value.trim();
+  const title = document.getElementById('title').value.trim();
+  const start = document.getElementById('start').value;
+  const end = document.getElementById('end').value;
+  const note = document.getElementById('note').value.trim();
+
+  const owner = '33W-hi';
+  const repo = '33w-hi.github.io';
+
+  if(!token || !title || !start){
+    statusEl.textContent = '토큰, 행사 이름, 시작일은 꼭 입력해주세요.';
+    statusEl.className = 'status-msg show error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '추가 중...';
+
+  const slug = `${start}-${slugify(title) || 'event'}`;
+  const path = `_area_events/${slug}.md`;
+
+  const frontMatter = {
+    title: title,
+    start: start,
+    end: end || start,
+    source: '아이파크몰 고척점',
+    note: note || null,
+    added_at: new Date().toISOString().slice(0,10)
+  };
+
+  const fileBody = `---\n${JSON.stringify(frontMatter, null, 2)}\n---\n`;
+
+  try{
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github+json'
+      },
+      body: JSON.stringify({
+        message: `아이파크몰 일정 추가: ${title}`,
+        content: btoa(unescape(encodeURIComponent(fileBody)))
+      })
+    });
+
+    if(res.ok){
+      statusEl.textContent = '추가됐어요! 1분 정도 후 일정 목록에 반영됩니다.';
+      statusEl.className = 'status-msg show success';
+      document.getElementById('area-form').reset();
+    } else {
+      const err = await res.json();
+      statusEl.textContent = `추가 실패: ${err.message || res.status}`;
+      statusEl.className = 'status-msg show error';
+    }
+  } catch(err){
+    statusEl.textContent = `오류가 발생했어요: ${err.message}`;
+    statusEl.className = 'status-msg show error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '일정 추가';
+  }
+});
+</script>

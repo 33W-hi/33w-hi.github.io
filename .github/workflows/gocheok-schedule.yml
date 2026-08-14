@@ -1,0 +1,31 @@
+name: Gocheok Skydome Schedule
+
+on:
+  schedule:
+    # 매주 월요일 00:00 UTC = 09:00 KST(한국시간)
+    - cron: '0 0 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 일정 조회 및 게시
+        run: node scripts/fetch-gocheok-schedule.js
+
+      - name: 변경사항 커밋 및 푸시
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _area_events/
+          git diff --cached --quiet || git commit -m "고척스카이돔 일정 자동 게시 $(date +'%Y-%m-%d')"
+          git push

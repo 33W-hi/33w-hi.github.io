@@ -20,6 +20,8 @@ collections:
   dunkin:
     output: true
     permalink: /dunkin/:name/
+  area_events:
+    output: false
 
 # 기본 레이아웃 지정
 defaults:
