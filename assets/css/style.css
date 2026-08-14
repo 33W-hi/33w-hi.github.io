@@ -450,6 +450,19 @@ footer.site-footer{
   color: #fff;
 }
 
+/* 홈으로 가는 링크 */
+.home-link{
+  display: inline-block;
+  font-size: 13px;
+  color: var(--pine);
+  text-decoration: none;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--pine);
+  opacity: 0.85;
+}
+
+.home-link:hover{ opacity: 1; }
+
 /* 식단 - 배너형 레이아웃 */
 .diet-banner{
   display: flex;

@@ -16,6 +16,10 @@
       <p class="tagline">{{ site.description }}</p>
     </header>
 
+    {% if page.url != '/' %}
+    <a href="{{ '/' | relative_url }}" class="home-link no-print">← 홈으로</a>
+    {% endif %}
+
     {{ content }}
 
     <footer class="site-footer no-print">
