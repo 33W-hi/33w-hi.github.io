@@ -22,6 +22,8 @@ collections:
     permalink: /dunkin/:name/
   area_events:
     output: false
+  incheon_sports:
+    output: false
 
 # 기본 레이아웃 지정
 defaults:

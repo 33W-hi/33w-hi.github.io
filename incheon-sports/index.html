@@ -1,0 +1,59 @@
+---
+layout: default
+title: 인천광역시체육회 대관일정
+---
+<section>
+  <h2>인천광역시체육회 대관일정</h2>
+  <p style="font-size:14px; color:#7a8574; margin-bottom:10px;">
+    이 사이트는 자동 수집이 막혀있어서(robots.txt), 직접 확인하신 대관 일정을 아래 버튼으로 추가해주세요.
+  </p>
+  <p style="font-size:13px; margin-bottom:20px;">
+    <a href="https://www.icsports.or.kr/fmcs/748" target="_blank" style="color:var(--pine);">공식 대관일정 페이지 바로가기 →</a>
+  </p>
+
+  <a class="write-cta" href="{{ '/incheon-sports/write/' | relative_url }}" style="margin-bottom:24px;">✎ 대관일정 추가</a>
+
+  {% assign today = 'now' | date: '%Y-%m-%d' %}
+  {% assign current_events = site.incheon_sports | where_exp: "item", "item.start <= today and item.end >= today" | sort: 'start' %}
+  {% assign future_events = site.incheon_sports | where_exp: "item", "item.start > today" | sort: 'start' %}
+  {% assign past_events = site.incheon_sports | where_exp: "item", "item.end < today" | sort: 'start' | reverse %}
+
+  <div class="records" style="margin-top:20px;">
+    {% for ev in current_events %}
+      <div class="record schedule-item current" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
+          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
+          <span class="title">{{ ev.title }}</span>
+          <span class="tag-current">진행중</span>
+        </div>
+        {% if ev.note %}<div style="font-size:12px;" class="schedule-source">{{ ev.note }}</div>{% endif %}
+      </div>
+    {% endfor %}
+
+    {% for ev in future_events %}
+      <div class="record schedule-item {% if forloop.first %}next{% endif %}" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
+          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
+          <span class="title">{{ ev.title }}</span>
+          {% if forloop.first %}<span class="tag-next">다음 일정</span>{% endif %}
+        </div>
+        {% if ev.note %}<div style="font-size:12px;" class="schedule-source">{{ ev.note }}</div>{% endif %}
+      </div>
+    {% endfor %}
+
+    {% for ev in past_events %}
+      <div class="record schedule-item past" style="flex-direction:column; align-items:flex-start; gap:4px;">
+        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
+          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
+          <span class="title">{{ ev.title }}</span>
+        </div>
+        {% if ev.note %}<div style="font-size:12px;" class="schedule-source">{{ ev.note }}</div>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {% assign total_count = current_events.size | plus: future_events.size | plus: past_events.size %}
+  {% if total_count == 0 %}
+  <p class="empty-note">아직 등록된 대관일정이 없어요.</p>
+  {% endif %}
+</section>
