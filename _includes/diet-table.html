@@ -3,6 +3,7 @@
   <div class="banner-text" style="flex:1;">
     <input type="text" class="banner-title-input" placeholder="OO의 Weekly Diet Plan" value="나의 Weekly Diet Plan">
     <div class="banner-sub">{{ include.week_label }} · 매주 일요일 09시 자동 생성</div>
+    <div class="banner-sub" id="today-sub"></div>
   </div>
 </div>
 
@@ -36,6 +37,14 @@
 </div>
 
 <script>
+(function(){
+  var todayDate = new Date();
+  var weekdays = ['일','월','화','수','목','금','토'];
+  var today = todayDate.getFullYear() + '.' + String(todayDate.getMonth()+1).padStart(2,'0') + '.' + String(todayDate.getDate()).padStart(2,'0');
+  var el = document.querySelector('#today-sub');
+  if(el) el.textContent = '오늘: ' + today + ' (' + weekdays[todayDate.getDay()] + ')';
+})();
+
 (function(){
   const KEY_BREAKFAST = 'mealplan-breakfast';
   const KEY_TITLE = 'mealplan-title';

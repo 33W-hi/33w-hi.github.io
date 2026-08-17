@@ -4,6 +4,7 @@ title: 개봉역 주변 일정
 ---
 <section>
   <h2>개봉역 주변 일정</h2>
+  <p id="today-banner"></p>
   <p style="font-size:14px; color:#7a8574; margin-bottom:10px;">
     고척스카이돔 일정은 매주 자동으로 가져와요. 아이파크몰 고척점 행사는 자동 수집이 어려워서,
     직접 보신 걸 아래 버튼으로 추가하시면 여기 같이 표시돼요.
@@ -11,56 +12,83 @@ title: 개봉역 주변 일정
 
   <a class="write-cta" href="{{ '/schedule/write/' | relative_url }}" style="margin-bottom:24px;">✎ 아이파크몰 일정 추가</a>
 
-  {% assign today = 'now' | date: '%Y-%m-%d' %}
-  {% assign current_events = site.area_events | where_exp: "item", "item.start <= today and item.end >= today" | sort: 'start' %}
-  {% assign future_events = site.area_events | where_exp: "item", "item.start > today" | sort: 'start' %}
-  {% assign past_events = site.area_events | where_exp: "item", "item.end < today" | sort: 'start' | reverse %}
-
   <div class="records" id="schedule-list" style="margin-top:20px;">
-    {% for ev in current_events %}
-      <div class="record schedule-item current" style="flex-direction:column; align-items:flex-start; gap:4px;">
-        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
-          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
-          <span class="title">{{ ev.title }}</span>
-          <span class="tag-current">진행중</span>
-        </div>
-        <div style="font-size:12px;" class="schedule-source">
-          {% if ev.source == '아이파크몰 고척점' %}🛍{% else %}⚾{% endif %} {{ ev.source }}
-          {% if ev.note %} · {{ ev.note }}{% endif %}
-        </div>
+    {% assign events = site.area_events | sort: 'start' %}
+    {% for ev in events %}
+    <div class="record schedule-item" data-start="{{ ev.start }}" data-end="{{ ev.end | default: ev.start }}" style="flex-direction:column; align-items:flex-start; gap:4px;">
+      <div class="schedule-row" style="display:flex; gap:10px; align-items:baseline; width:100%; flex-wrap:wrap;">
+        <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
+        <span class="title">{{ ev.title }}</span>
       </div>
-    {% endfor %}
-
-    {% for ev in future_events %}
-      <div class="record schedule-item {% if forloop.first %}next{% endif %}" style="flex-direction:column; align-items:flex-start; gap:4px;">
-        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
-          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
-          <span class="title">{{ ev.title }}</span>
-          {% if forloop.first %}<span class="tag-next">다음 일정</span>{% endif %}
-        </div>
-        <div style="font-size:12px;" class="schedule-source">
-          {% if ev.source == '아이파크몰 고척점' %}🛍{% else %}⚾{% endif %} {{ ev.source }}
-          {% if ev.note %} · {{ ev.note }}{% endif %}
-        </div>
+      <div style="font-size:12px;" class="schedule-source">
+        {% if ev.source == '아이파크몰 고척점' %}🛍{% else %}⚾{% endif %} {{ ev.source }}
+        {% if ev.note %} · {{ ev.note }}{% endif %}
       </div>
-    {% endfor %}
-
-    {% for ev in past_events %}
-      <div class="record schedule-item past" style="flex-direction:column; align-items:flex-start; gap:4px;">
-        <div style="display:flex; gap:10px; align-items:baseline; width:100%;">
-          <span class="date">{{ ev.start }}{% if ev.end and ev.end != ev.start %} ~ {{ ev.end }}{% endif %}</span>
-          <span class="title">{{ ev.title }}</span>
-        </div>
-        <div style="font-size:12px;" class="schedule-source">
-          {% if ev.source == '아이파크몰 고척점' %}🛍{% else %}⚾{% endif %} {{ ev.source }}
-          {% if ev.note %} · {{ ev.note }}{% endif %}
-        </div>
-      </div>
+    </div>
     {% endfor %}
   </div>
-
-  {% assign total_count = current_events.size | plus: future_events.size | plus: past_events.size %}
-  {% if total_count == 0 %}
-  <p class="empty-note">아직 등록된 일정이 없어요.</p>
-  {% endif %}
+  <p class="empty-note" id="empty-note" style="display:none;">아직 등록된 일정이 없어요.</p>
 </section>
+
+<script>
+(function(){
+  var todayDate = new Date();
+  var today = todayDate.getFullYear() + '-' + String(todayDate.getMonth()+1).padStart(2,'0') + '-' + String(todayDate.getDate()).padStart(2,'0');
+  var weekdays = ['일','월','화','수','목','금','토'];
+
+  var banner = document.getElementById('today-banner');
+  banner.textContent = '오늘: ' + today + ' (' + weekdays[todayDate.getDay()] + ') 기준';
+  banner.style.cssText = 'font-size:13px; color:var(--clay); font-weight:600; margin-bottom:16px;';
+
+  var list = document.getElementById('schedule-list');
+  var items = Array.prototype.slice.call(list.querySelectorAll('.schedule-item'));
+
+  if(items.length === 0){
+    document.getElementById('empty-note').style.display = 'block';
+    return;
+  }
+
+  var current = [], future = [], past = [];
+
+  items.forEach(function(item){
+    var start = item.getAttribute('data-start');
+    var end = item.getAttribute('data-end');
+    if(start <= today && today <= end){
+      current.push(item);
+    } else if(start > today){
+      future.push(item);
+    } else {
+      past.push(item);
+    }
+  });
+
+  function byStartAsc(a, b){ return a.getAttribute('data-start').localeCompare(b.getAttribute('data-start')); }
+  function byStartDesc(a, b){ return b.getAttribute('data-start').localeCompare(a.getAttribute('data-start')); }
+
+  current.sort(byStartAsc);
+  future.sort(byStartAsc);
+  past.sort(byStartDesc);
+
+  current.forEach(function(item){
+    item.classList.add('current');
+    var tag = document.createElement('span');
+    tag.className = 'tag-current';
+    tag.textContent = '진행중';
+    item.querySelector('.schedule-row').appendChild(tag);
+  });
+
+  if(future.length > 0){
+    future[0].classList.add('next');
+    var tag = document.createElement('span');
+    tag.className = 'tag-next';
+    tag.textContent = '다음 일정';
+    future[0].querySelector('.schedule-row').appendChild(tag);
+  }
+
+  past.forEach(function(item){ item.classList.add('past'); });
+
+  current.concat(future).concat(past).forEach(function(item){
+    list.appendChild(item);
+  });
+})();
+</script>
