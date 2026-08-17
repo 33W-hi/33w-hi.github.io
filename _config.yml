@@ -24,6 +24,8 @@ collections:
     output: false
   incheon_sports:
     output: false
+  phonedeals:
+    output: false
 
 # 기본 레이아웃 지정
 defaults:

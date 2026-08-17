@@ -1,0 +1,111 @@
+---
+layout: default
+title: 알뜰폰 정보 추가
+---
+<section>
+  <h2>알뜰폰 정보 추가</h2>
+  <p style="font-size:14px; color:#7a8574; margin-bottom:14px;">
+    <a href="https://gall.dcinside.com/mgallery/board/lists/?id=mvnogallery" target="_blank" style="color:var(--pine);">디시인사이드 알뜰폰 갤러리</a>에서
+    본 요금제/특가 정보를 입력해주세요. GitHub 토큰이 필요해요 (repo 권한).
+  </p>
+
+  <form class="write-form" id="deal-form">
+    <div class="field">
+      <label for="token">GitHub 토큰</label>
+      <input type="password" id="token" placeholder="ghp_..." autocomplete="off" required>
+    </div>
+
+    <div class="field">
+      <label for="title">제목 / 요금제 내용</label>
+      <input type="text" id="title" placeholder="예: A모바일 LG망 24개월 25000원" required>
+    </div>
+
+    <div class="field">
+      <label for="url">원본 글 링크</label>
+      <input type="text" id="url" placeholder="https://gall.dcinside.com/..." required>
+    </div>
+
+    <button type="submit" class="publish-btn" id="publish-btn">추가하기</button>
+    <div class="status-msg" id="status-msg"></div>
+  </form>
+</section>
+
+<script>
+function slugify(text){
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-가-힣]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^\-+|\-+$/g, '');
+}
+
+document.getElementById('deal-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const btn = document.getElementById('publish-btn');
+  const statusEl = document.getElementById('status-msg');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = '';
+
+  const token = document.getElementById('token').value.trim();
+  const title = document.getElementById('title').value.trim();
+  const url = document.getElementById('url').value.trim();
+
+  const owner = '33W-hi';
+  const repo = '33w-hi.github.io';
+
+  if(!token || !title || !url){
+    statusEl.textContent = '모두 입력해주세요.';
+    statusEl.className = 'status-msg show error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '추가 중...';
+
+  const today = new Date().toISOString().slice(0,10);
+  const slug = `${today}-${slugify(title) || 'deal'}`;
+  const path = `_phonedeals/manual-${slug}.md`;
+
+  const frontMatter = {
+    title: title,
+    external_url: url,
+    source: '알뜰폰 갤러리',
+    posted_at: today
+  };
+
+  const fileBody = `---\n${JSON.stringify(frontMatter, null, 2)}\n---\n`;
+
+  try{
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github+json'
+      },
+      body: JSON.stringify({
+        message: `알뜰폰 정보 추가: ${title}`,
+        content: btoa(unescape(encodeURIComponent(fileBody)))
+      })
+    });
+
+    if(res.ok){
+      statusEl.textContent = '추가됐어요! 1분 정도 후 목록에 반영됩니다.';
+      statusEl.className = 'status-msg show success';
+      document.getElementById('deal-form').reset();
+    } else {
+      const err = await res.json();
+      statusEl.textContent = `추가 실패: ${err.message || res.status}`;
+      statusEl.className = 'status-msg show error';
+    }
+  } catch(err){
+    statusEl.textContent = `오류가 발생했어요: ${err.message}`;
+    statusEl.className = 'status-msg show error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '추가하기';
+  }
+});
+</script>

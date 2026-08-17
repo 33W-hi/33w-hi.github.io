@@ -1,0 +1,40 @@
+---
+layout: default
+title: 휴대폰 요금제 & 특가
+---
+<section>
+  <h2>휴대폰 요금제 & 특가</h2>
+  <p id="today-banner"></p>
+  <p style="font-size:14px; color:#7a8574; margin-bottom:10px;">
+    뽐뿌 휴대폰포럼은 매일 자동으로 확인해서 딜 관련 글만 골라 올려요.
+    디시인사이드 알뜰폰 갤러리는 자동 수집이 막혀있어서, 직접 보신 걸 추가해주세요.
+  </p>
+
+  <a class="write-cta" href="{{ '/phonedeals/write/' | relative_url }}" style="margin-bottom:24px;">✎ 알뜰폰 정보 추가</a>
+
+  <div class="records" id="deal-list" style="margin-top:20px;">
+    {% assign deals = site.phonedeals | sort: 'posted_at' | reverse %}
+    {% for d in deals %}
+    <a class="record" href="{{ d.external_url }}" target="_blank">
+      <span class="date">{{ d.posted_at }}</span>
+      <span class="title">
+        {% if d.source == '알뜰폰 갤러리' %}📶{% else %}📱{% endif %} {{ d.title }}
+      </span>
+    </a>
+    {% endfor %}
+  </div>
+  {% if deals.size == 0 %}
+  <p class="empty-note">아직 게시된 정보가 없어요.</p>
+  {% endif %}
+</section>
+
+<script>
+(function(){
+  var todayDate = new Date();
+  var weekdays = ['일','월','화','수','목','금','토'];
+  var today = todayDate.getFullYear() + '-' + String(todayDate.getMonth()+1).padStart(2,'0') + '-' + String(todayDate.getDate()).padStart(2,'0');
+  var banner = document.getElementById('today-banner');
+  banner.textContent = '오늘: ' + today + ' (' + weekdays[todayDate.getDay()] + ') 기준';
+  banner.style.cssText = 'font-size:13px; color:var(--clay); font-weight:600; margin-bottom:16px;';
+})();
+</script>
