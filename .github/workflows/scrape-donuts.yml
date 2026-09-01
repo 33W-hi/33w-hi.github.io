@@ -1,0 +1,50 @@
+name: Scrape Dunkin Donut Images
+
+# Actions 탭에서 수동으로 "Run workflow" 버튼을 눌러 실행합니다.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write   # Release 생성을 위해 필요
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Playwright 설치
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install --with-deps chromium
+
+      - name: 스크래핑 실행
+        run: node scripts/scrape-donuts.mjs
+
+      - name: 결과 압축
+        run: |
+          cd donuts
+          zip -r ../dunkin-donuts-images.zip .
+          cd ..
+
+      - name: 아티팩트 업로드 (Actions 탭에서 바로 다운로드 가능)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dunkin-donuts-images
+          path: dunkin-donuts-images.zip
+
+      - name: 릴리즈로 게시 (외부 공유용 다운로드 링크)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: donut-images-${{ github.run_number }}
+          name: "던킨 도넛 이미지 ${{ github.run_number }}"
+          files: dunkin-donuts-images.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
